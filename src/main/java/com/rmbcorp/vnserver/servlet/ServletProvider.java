@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServlet;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.AbstractMap;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
-
-import static java.util.Map.entry;
 
 public class ServletProvider {
 
@@ -41,7 +41,7 @@ public class ServletProvider {
     private static Map<String, String> immMap() throws URISyntaxException {
         URL publicResource = ServletProvider.class.getClassLoader().getResource("public");
         URI resource = publicResource == null ? URI.create("public") : publicResource.toURI().normalize();
-        return Map.ofEntries(
+        return newMap(
                 entry("aliases", "true"),
                 entry("acceptRanges", "true"),
                 entry("dirAllowed", "false"),
@@ -55,6 +55,19 @@ public class ServletProvider {
                 entry("useFileMappedBuffer", "true"),
                 entry("cacheControl", "private, max-age=31536000")
         );
+    }
+
+    @SafeVarargs
+    static <K,V> Map<K,V> newMap(Map.Entry<K, V>... entries) {
+        HashMap<K, V> map = new HashMap<>();
+        for (Map.Entry<K, V> entry : entries) {
+            map.put(entry.getKey(), entry.getValue());
+        }
+        return map;
+    }
+
+    static <K,V> Map.Entry<K,V> entry(K key, V value) {
+        return new AbstractMap.SimpleEntry<>(key, value);
     }
 
     interface InjectableServlet<T> {

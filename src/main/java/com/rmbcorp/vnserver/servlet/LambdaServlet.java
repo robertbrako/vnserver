@@ -9,12 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.rmbcorp.vnserver.servlet.ServletProvider.*;
+
 public class LambdaServlet extends HttpServlet implements ServletProvider.InjectableServlet<ParamUtil> {
     private Map<String, String> apiMap;
     private ParamUtil paramUtil;
 
     LambdaServlet(String responseText) {
-        apiMap = Map.of("data", responseText);
+        apiMap = newMap(entry("data", responseText));
     }
 
     @Override

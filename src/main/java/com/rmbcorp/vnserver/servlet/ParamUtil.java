@@ -13,6 +13,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +58,7 @@ public class ParamUtil {
             throw new LightStackException(ExceptionType.DESERIALIZE, bean, bean.serverMessages);
         } catch (MismatchedInputException e) {
             String clientMessage = e.getLocalizedMessage().replaceFirst("\n.*", " for " + trimForClient(e.getPathReference()));
-            throw new LightStackException(ExceptionType.DESERIALIZE, clientMessage, List.<String[]>of(new String[]{"cause", e.getClass().getName()}));
+            throw new LightStackException(ExceptionType.DESERIALIZE, clientMessage, Collections.singletonList(new String[]{"cause", e.getClass().getName()}));
         } catch (JsonProcessingException e) {
             throw new LightStackException(ExceptionType.DESERIALIZE, e, e.getMessage());
         } catch (Exception e) {
@@ -101,7 +103,7 @@ public class ParamUtil {
             propertyName = e.getPropertyName();
             referringClass = e.getReferringClass() == null ? "" : e.getReferringClass().getSimpleName();
             acceptableProps = e.getKnownPropertyIds().stream().map(String::valueOf).collect(Collectors.toList());
-            serverMessages = List.of(new String[]{"propertyName", propertyName},
+            serverMessages = Arrays.asList(new String[]{"propertyName", propertyName},
                     new String[]{"referringClass", e.getReferringClass().getName()}
             );
         }
@@ -119,7 +121,7 @@ public class ParamUtil {
             pathReference = trimForClient(e.getPathReference());
             value = String.valueOf(e.getValue());
             targetType =  e.getTargetType().getSimpleName();
-            serverMessages = List.of(new String[]{ "pathReference", e.getPathReference()},
+            serverMessages = Arrays.asList(new String[]{ "pathReference", e.getPathReference()},
                     new String[]{ "value", String.valueOf(e.getValue())},
                     new String[]{ "targetType", e.getTargetType().getName()}
             );
