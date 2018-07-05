@@ -20,7 +20,7 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_lazy_route_resource lazy re
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-navbar></app-navbar>\r\n<div class=\"container\" style=\"margin-top: 70px\">\r\n  <router-outlet></router-outlet>\r\n</div>\r\n"
+module.exports = "<app-navbar></app-navbar>\n<div class=\"container\" style=\"margin-top: 70px\">\n  <router-outlet></router-outlet>\n</div>\n"
 
 /***/ }),
 
@@ -37,7 +37,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-var AppComponent = (function () {
+var AppComponent = /** @class */ (function () {
     function AppComponent() {
         this.title = 'app';
     }
@@ -96,7 +96,7 @@ var appRoutes = [
     { path: 'game', component: __WEBPACK_IMPORTED_MODULE_10__components_game_game_component__["a" /* GameComponent */] },
     { path: 'users', component: __WEBPACK_IMPORTED_MODULE_7__components_users_users_component__["a" /* UsersComponent */] }
 ];
-var AppModule = (function () {
+var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
@@ -131,12 +131,39 @@ var AppModule = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FrameGroup; });
-var FrameGroup = (function () {
-    function FrameGroup(parent) {
+/* unused harmony export FrameTemplate */
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var FrameTemplate = /** @class */ (function () {
+    function FrameTemplate() {
+    }
+    return FrameTemplate;
+}());
+var OptionTemplate = /** @class */ (function () {
+    function OptionTemplate() {
+    }
+    return OptionTemplate;
+}());
+var FrameGroup = /** @class */ (function (_super) {
+    __extends(FrameGroup, _super);
+    function FrameGroup(template, parent) {
+        var _this = _super.call(this) || this;
         if (parent) {
-            this.charId = parent.charId;
-            this.displayName = parent.displayName;
+            _this.charId = parent.charId;
+            _this.displayName = parent.displayName;
         }
+        if (template) {
+            Object.assign(_this, template);
+        }
+        return _this;
     }
     FrameGroup.mkframes = function (data) {
         var result = this.buildFrames(data);
@@ -147,18 +174,22 @@ var FrameGroup = (function () {
         var current;
         var result = aResult ? aResult : [];
         data.forEach(function (frame) {
-            if (parent) {
-                if (!frame.charId)
-                    frame.charId = parent.charId;
-                if (!frame.displayName)
-                    frame.displayName = parent.displayName;
-            }
+            var currentFrame = new FrameGroup(frame, parent);
             if (frame.text) {
-                current = frame;
+                current = currentFrame;
                 if (result.length > 0) {
                     var latest = result[result.length - 1];
-                    latest.next = current;
-                    current.prev = latest;
+                    latest.nextFrame = current;
+                    current.prevFrame = latest;
+                }
+                if (frame.options) {
+                    currentFrame.next = function (option) {
+                        currentFrame.children = currentFrame.options.filter(function (o) { return o === option; })[0].children;
+                        var tree = _this.buildFrames(currentFrame.children, currentFrame);
+                        tree[0].prevFrame = currentFrame;
+                        tree[tree.length - 1].nextFrame = currentFrame.nextFrame;
+                        return tree[0];
+                    };
                 }
                 result.push(current);
             }
@@ -166,8 +197,7 @@ var FrameGroup = (function () {
                 current = undefined;
             }
             if (frame.children) {
-                _this.buildFrames(frame.children, frame, result);
-                // .forEach(child => result.push(child));
+                _this.buildFrames(frame.children, currentFrame, result);
             }
         });
         return result;
@@ -184,9 +214,18 @@ var FrameGroup = (function () {
         });
         return result;
     };
+    FrameGroup.prototype.hasNext = function () {
+        return !!this.options || !!this.nextFrame;
+    };
+    FrameGroup.prototype.next = function (option) {
+        return this.nextFrame;
+    };
+    FrameGroup.prototype.prev = function () {
+        return this.prevFrame;
+    };
     return FrameGroup;
-}());
-var CharGroup = (function () {
+}(FrameTemplate));
+var CharGroup = /** @class */ (function () {
     function CharGroup() {
         this.text = '';
     }
@@ -200,12 +239,13 @@ var CharGroup = (function () {
 /***/ "../../../../../src/app/components/game/game.component.css":
 /***/ (function(module, exports, __webpack_require__) {
 
+var escape = __webpack_require__("../../../../css-loader/lib/url/escape.js");
 exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-base.js")(false);
 // imports
 
 
 // module
-exports.push([module.i, ".overlay {\r\n    background-color: rgba(16, 16, 16, .75);\r\n    width: 100%;\r\n    height: 100%;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    z-index: 1;\r\n    display: none;\r\n    -webkit-animation-name: deinani;\r\n            animation-name: deinani;\r\n    -webkit-animation-duration: 1s;\r\n            animation-duration: 1s;\r\n}\r\n.bgimg {\r\n    background: url(" + __webpack_require__("../../../../../src/assets/MplsNicollet.png") + ") no-repeat center fixed;\r\n    background-size: cover;\r\n    \r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    min-height: 100%;\r\n    z-index: -1;\r\n    overflow-x: auto;\r\n}\r\n.txtbox {\r\n    position: absolute;\r\n    top: 70%;\r\n    width: 70%;\r\n    min-width: 460px;\r\n    height: 30%;\r\n    padding: 16px;\r\n    color: white;\r\n    background: rgba(0, 0, 16, .75);\r\n    z-index: 2;\r\n}\r\n.txtarea {\r\n    margin: 6px;\r\n    font-size: 14pt;\r\n}\r\n.img1 {\r\n    position: absolute;\r\n    -webkit-animation-name: meinani;\r\n            animation-name: meinani;\r\n    -webkit-animation-duration: 2s;\r\n            animation-duration: 2s;\r\n    /*animation-fill-mode: forwards;*/\r\n}\r\n\r\n@-webkit-keyframes meinani {\r\n    0% {\r\n        -webkit-transform: translateX(-400px);\r\n                transform: translateX(-400px);\r\n    }\r\n}\r\n\r\n@keyframes meinani {\r\n    0% {\r\n        -webkit-transform: translateX(-400px);\r\n                transform: translateX(-400px);\r\n    }\r\n}\r\n\r\n@-webkit-keyframes deinani {\r\n    0% {\r\n        background-color: rgba(240, 0, 16, .70)\r\n    }\r\n}\r\n\r\n@keyframes deinani {\r\n    0% {\r\n        background-color: rgba(240, 0, 16, .70)\r\n    }\r\n}", ""]);
+exports.push([module.i, ".overlay {\n    background-color: rgba(16, 16, 16, .75);\n    width: 100%;\n    height: 100%;\n    position: absolute;\n    left: 0;\n    top: 0;\n    z-index: 1;\n    display: none;\n    animation-name: deinani;\n    animation-duration: 1s;\n}\n.bgimg {\n    background: url(" + escape(__webpack_require__("../../../../../src/assets/MplsNicollet.png")) + ") no-repeat center fixed;\n    background-size: cover;\n    \n    position: absolute;\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 100%;\n    min-height: 100%;\n    z-index: -1;\n    overflow-x: auto;\n}\n.txtbox {\n    position: absolute;\n    top: 70%;\n    width: 70%;\n    min-width: 460px;\n    height: 30%;\n    padding: 16px;\n    color: white;\n    background: rgba(0, 0, 16, .75);\n    z-index: 2;\n}\n.txtarea {\n    margin: 6px;\n    font-size: 14pt;\n}\n.img1 {\n    position: absolute;\n    animation-name: meinani;\n    animation-duration: 2s;\n    /*animation-fill-mode: forwards;*/\n}\n\n@keyframes meinani {\n    0% {\n        transform: translateX(-400px);\n    }\n}\n\n@keyframes deinani {\n    0% {\n        background-color: rgba(240, 0, 16, .70)\n    }\n}", ""]);
 
 // exports
 
@@ -218,7 +258,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/game/game.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div id=\"img0_0\" class=\"overlay\"></div>\r\n<div class=\"bgimg\">\r\n</div>\r\n<div id=\"img1_0\" class=\"img1\">\r\n  <img src=\"assets/KicchiriProd.jpg\" (click)=\"next()\">\r\n</div>\r\n<div id=\"txtbox\" class=\"txtbox\" *ngIf=\"txtbox.visible\">\r\n  <label class=\"txtarea\">{{ speaker }}</label>\r\n  <button type=\"button\" class=\"btn btn-danger float-right\" (click)=\"end()\"  *ngIf=\"!current.next\">End</button>\r\n  <button type=\"button\" class=\"btn btn-primary float-right\" (click)=\"next()\" [(disabled)]=\"!current.next\">Next</button>\r\n  <button type=\"button\" class=\"btn btn-primary float-right\" (click)=\"prev()\" *ngIf=\"current.prev\">Prev</button>\r\n  <label class=\"txtarea\" style=\"display: block\" *ngFor=\"let content of textContent.split('\\n')\">{{ content }}</label>\r\n</div>"
+module.exports = "<div id=\"img0_0\" class=\"overlay\"></div>\n<div class=\"bgimg\">\n</div>\n<div id=\"img1_0\" class=\"img1\">\n  <img src=\"assets/KicchiriProd.jpg\" (click)=\"next()\">\n</div>\n<div id=\"txtbox\" class=\"txtbox\" *ngIf=\"txtbox.visible\">\n  <label class=\"txtarea\">{{ speaker }}</label>\n  <button type=\"button\" class=\"btn btn-danger float-right\" (click)=\"end()\"  *ngIf=\"!this.current.hasNext()\">End</button>\n  <button type=\"button\" class=\"btn btn-primary float-right\" (click)=\"next()\" [disabled]=\"noNext()\">Next</button>\n  <button type=\"button\" class=\"btn btn-primary float-right\" (click)=\"prev()\" *ngIf=\"current.prevFrame\">Prev</button>\n  <label class=\"txtarea\" style=\"display: block\" *ngFor=\"let content of textContent.split('\\n')\">{{ content }}</label>\n  <button type=\"button\" class=\"btn btn-primary float-right\" (click)=\"next(opt)\" *ngFor=\"let opt of current.options\">{{ opt.label }}</button>\n</div>\n"
 
 /***/ }),
 
@@ -241,8 +281,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+//import { English2 } from '../../i18n/english2';
 
-var GameComponent = (function () {
+var GameComponent = /** @class */ (function () {
     function GameComponent() {
         this.username = localStorage.getItem('username');
         this.lang = new __WEBPACK_IMPORTED_MODULE_1__i18n_english__["a" /* English */]();
@@ -266,20 +307,26 @@ var GameComponent = (function () {
             }
         };
         // this.lang2 = new English2(this.charIds, this.players);
-        this.chapter = __WEBPACK_IMPORTED_MODULE_2__framegroup__["a" /* FrameGroup */].mkframes(this.lang.ch1);
-        this.current = this.chapter[0];
+        // this.chapter = FrameGroup.mkframes(this.lang.ch1);
+        // this.current = this.chapter[0];
     }
     GameComponent.prototype.ngOnInit = function () {
         localStorage.setItem('global.navbar', 'false');
+        var newGame = JSON.parse(localStorage.getItem('global.newgame')) || this.lang.ch2;
+        this.chapter = __WEBPACK_IMPORTED_MODULE_2__framegroup__["a" /* FrameGroup */].mkframes(newGame);
+        this.current = this.chapter[0];
         this.setText();
     };
-    GameComponent.prototype.next = function () {
-        if (this.current.next)
-            this.current = this.current.next;
+    GameComponent.prototype.noNext = function () {
+        return this.current.options !== undefined || !this.current.hasNext();
+    };
+    GameComponent.prototype.next = function (option) {
+        if (this.current.hasNext())
+            this.current = this.current.next(option);
         this.setText();
     };
     GameComponent.prototype.prev = function () {
-        this.current = this.current.prev;
+        this.current = this.current.prev();
         this.setText();
         document.getElementById('img0_0').style.display = 'none';
         //document.getElementById('img1_0').style.display = 'initial';
@@ -290,7 +337,7 @@ var GameComponent = (function () {
             //document.getElementById('img1_0').style.display = 'none';
             var hackFrame = new __WEBPACK_IMPORTED_MODULE_2__framegroup__["a" /* FrameGroup */]();
             hackFrame.displayName = 'rmbdev';
-            hackFrame.prev = this.current;
+            hackFrame.prevFrame = this.current;
             hackFrame.text = "Thanks for your time!!!\n        Credits: programming, character art, background art, writing: rmbdev\n        Special credits: Sayonara Zetsubou Sensei (character design)";
             this.current = hackFrame;
             this.setText();
@@ -299,7 +346,7 @@ var GameComponent = (function () {
         else {
             document.getElementById('img0_0').style.display = 'none';
             //document.getElementById('img1_0').style.display = 'initial';
-            this.current = this.chapter[5];
+            this.current = this.chapter[0];
             this.ended = false;
             this.setText();
         }
@@ -331,7 +378,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, ".table-data {\r\n  height: 400px;\r\n  overflow-y: auto;\r\n}\r\n\r\n.gh-image {\r\n  width: 75px;\r\n  height: 75px;\r\n  float: right\r\n}", ""]);
+exports.push([module.i, ".table-data {\n  height: 400px;\n  overflow-y: auto;\n}\n\n.gh-image {\n  width: 75px;\n  height: 75px;\n  float: right\n}", ""]);
 
 // exports
 
@@ -344,7 +391,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/github/github.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav>\r\n  <h1>VN Basic: {{ gameName }} </h1>\r\n  <div class=\"table-row\" style=\"margin-bottom: 10px\">\r\n  </div>\r\n  <table class=\"table table-hover\">\r\n    <tbody>\r\n      <tr (click)=\"onNextClick()\">\r\n        <th scope=\"row\" class=\"col-md-4\">{{lang.newGame}}</th>\r\n        <!--<td class=\"col-md-8\"><a href=\"{{user.html_url}}\">{{user.html_url}}</a></td>\r\n          <td class=\"col-md-4\"><img src=\"{{user.avatar_url}}\" [class.gh-image]=\"true\"></td>-->\r\n      </tr>\r\n      <tr (click)=\"nothing()\">\r\n        <th scope=\"row\" class=\"col-md-4\">{{lang.loadGame}}</th>\r\n      </tr>\r\n      <tr (click)=\"nothing()\">\r\n        <th scope=\"row\" class=\"col-md-4\">{{lang.options}}</th>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n</nav>\r\n<div class=\"table-data\">\r\n  <div>\r\n\r\n  </div>\r\n</div>"
+module.exports = "<nav>\n  <h1>VN Basic: {{ gameName }} </h1>\n  <div class=\"table-row\" style=\"margin-bottom: 10px\">\n  </div>\n  <table class=\"table table-hover\">\n    <tbody>\n      <tr (click)=\"onNextClick()\">\n        <th scope=\"row\" class=\"col-md-4\">{{lang.newGame}}</th>\n        <!--<td class=\"col-md-8\"><a href=\"{{user.html_url}}\">{{user.html_url}}</a></td>\n          <td class=\"col-md-4\"><img src=\"{{user.avatar_url}}\" [class.gh-image]=\"true\"></td>-->\n      </tr>\n      <tr (click)=\"nothing()\">\n        <th scope=\"row\" class=\"col-md-4\">{{lang.loadGame}}</th>\n      </tr>\n      <tr (click)=\"nothing()\">\n        <th scope=\"row\" class=\"col-md-4\">{{lang.options}}</th>\n      </tr>\n    </tbody>\n  </table>\n</nav>\n<div class=\"table-data\">\n  <div>\n\n  </div>\n</div>"
 
 /***/ }),
 
@@ -370,7 +417,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var GitHubComponent = (function () {
+var GitHubComponent = /** @class */ (function () {
     function GitHubComponent(ghService, router) {
         this.ghService = ghService;
         this.router = router;
@@ -426,7 +473,7 @@ var GitHubComponent = (function () {
 /***/ "../../../../../src/app/components/navbar/navbar.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-lg fixed-top navbar-dark bg-primary\" *ngIf=global_navbar>\r\n  <div class=\"container\">\r\n    <div class=\"navbar-header\">\r\n      <a class=\"navbar-brand\" href=\"/\">VN Basic</a>\r\n      <button type=\"button\" class=\"navbar-toggler\" data-toggler=\"collapse\" data-target=\"#navbar\"\r\n        aria-label=\"ToggleNavigation\" aria-expanded=\"true\" aria-controls=\"navbar\">\r\n        <span class=\"navbar-toggler-icon\"></span>\r\n      </button>\r\n    </div>\r\n    <div id=\"navbar\" class=\"collapse navbar-collapse\">\r\n      <ul class=\"navbar-nav\">\r\n        <li [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\" class=\"nav-item\">\r\n          <a routerLink=\"/\" class=\"nav-link\">Home</a>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  </div>\r\n</nav>\r\n"
+module.exports = "<nav class=\"navbar navbar-expand-lg fixed-top navbar-dark bg-primary\" *ngIf=global_navbar>\n  <div class=\"container\">\n    <div class=\"navbar-header\">\n      <a class=\"navbar-brand\" href=\"/\">VN Basic</a>\n      <button type=\"button\" class=\"navbar-toggler\" data-toggler=\"collapse\" data-target=\"#navbar\"\n        aria-label=\"ToggleNavigation\" aria-expanded=\"true\" aria-controls=\"navbar\">\n        <span class=\"navbar-toggler-icon\"></span>\n      </button>\n    </div>\n    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n      <ul class=\"navbar-nav\">\n        <li [routerLinkActive]=\"['active']\" [routerLinkActiveOptions]=\"{exact:true}\" class=\"nav-item\">\n          <a routerLink=\"/\" class=\"nav-link\">Home</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n"
 
 /***/ }),
 
@@ -446,7 +493,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
-var NavbarComponent = (function () {
+var NavbarComponent = /** @class */ (function () {
     function NavbarComponent() {
         this.global_navbar = true;
     }
@@ -488,7 +535,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/newgame/newgame.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"display: grid\">\r\n  <h1>{{ lang.newGame }}</h1>\r\n  <ul class=\"list-group\">\r\n    <li class=\"list-group-item\">\r\n      <label style=\"width: 120px\">{{ lang.name }}:</label>\r\n      <input type=\"text\" name=\"username\" [(ngModel)]=\"username\" required>\r\n    </li>\r\n    <li class=\"list-group-item\">\r\n      <label style=\"width: 120px\">Age:</label>\r\n      <input type=\"text\" placeholder=\"420\">\r\n    </li>\r\n    <li class=\"list-group-item\">\r\n      <label>* No gameplay elements listen to age.  Main character is 1X years old.</label>\r\n    </li>\r\n  </ul>\r\n  <button type=\"button\" class=\"btn btn-primary\" (click)=\"newGame()\">{{ lang.done }}</button>\r\n</div>\r\n"
+module.exports = "<div style=\"display: grid\">\n  <h1>{{ lang.newGame }}</h1>\n  <ul class=\"list-group\">\n    <li class=\"list-group-item\">\n      <label style=\"width: 120px\">{{ lang.name }}:</label>\n      <input type=\"text\" name=\"username\" [(ngModel)]=\"username\" required>\n    </li>\n    <li class=\"list-group-item\">\n      <label style=\"width: 120px\">Age:</label>\n      <input type=\"text\" placeholder=\"420\">\n    </li>\n    <li class=\"list-group-item\">\n      <label>* No gameplay elements listen to age.  Main character is 1X years old.</label>\n    </li>\n  </ul>\n  <button type=\"button\" class=\"btn btn-primary\" (click)=\"newGame()\">{{ lang.done }}</button>\n</div>\n"
 
 /***/ }),
 
@@ -512,7 +559,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var NewgameComponent = (function () {
+var NewgameComponent = /** @class */ (function () {
     function NewgameComponent(router) {
         this.router = router;
         this.username = 'Xx_skrublordz3000_xX';
@@ -544,7 +591,7 @@ var NewgameComponent = (function () {
 /***/ "../../../../../src/app/components/users/users.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"user\">\r\n  <h1>{{user.login}}</h1>\r\n  <ul class=\"list-group\">\r\n    <li class=\"list-group-item\"><label>Name: {{user.name}}</label></li>\r\n    <li class=\"list-group-item\"><label>Company: {{user.company}}</label></li>\r\n    <li class=\"list-group-item\"><label>Blog: {{user.blog}}</label></li>\r\n    <li class=\"list-group-item\"><label>Location: {{user.location}}</label></li>\r\n    <li class=\"list-group-item\"><label>Email: {{user.email}}</label></li>\r\n    <li class=\"list-group-item\"><label>Bio: {{user.bio}}</label></li>\r\n    <li class=\"list-group-item\"><label>Public Repos: {{user.public_repos}}</label></li>\r\n    <li class=\"list-group-item\"><label>Followers: {{user.followers}}</label></li>\r\n    <li class=\"list-group-item\"><label>Following: {{user.following}}</label></li>\r\n  </ul>\r\n</div>\r\n"
+module.exports = "<div *ngIf=\"user\">\n  <h1>{{user.login}}</h1>\n  <ul class=\"list-group\">\n    <li class=\"list-group-item\"><label>Name: {{user.name}}</label></li>\n    <li class=\"list-group-item\"><label>Company: {{user.company}}</label></li>\n    <li class=\"list-group-item\"><label>Blog: {{user.blog}}</label></li>\n    <li class=\"list-group-item\"><label>Location: {{user.location}}</label></li>\n    <li class=\"list-group-item\"><label>Email: {{user.email}}</label></li>\n    <li class=\"list-group-item\"><label>Bio: {{user.bio}}</label></li>\n    <li class=\"list-group-item\"><label>Public Repos: {{user.public_repos}}</label></li>\n    <li class=\"list-group-item\"><label>Followers: {{user.followers}}</label></li>\n    <li class=\"list-group-item\"><label>Following: {{user.following}}</label></li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -568,7 +615,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var UsersComponent = (function () {
+var UsersComponent = /** @class */ (function () {
     function UsersComponent(ghService, route) {
         var _this = this;
         this.ghService = ghService;
@@ -603,7 +650,7 @@ var UsersComponent = (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return English; });
-var English = (function () {
+var English = /** @class */ (function () {
     function English() {
         this.newGame = 'New Game';
         this.loadGame = 'Load Game';
@@ -650,7 +697,7 @@ var English = (function () {
             {
                 charId: 'p1',
                 displayName: 'Luka',
-                text: 'Please... let me X...'
+                text: 'Please... let me come...'
             },
             {
                 charId: 'kitsu_chiri',
@@ -708,7 +755,7 @@ var English = (function () {
                 children: [
                     { text: "That?  It's from a 3D model of downtown Minneapolis." },
                     { text: "The proportions are accurate to within a few feet." },
-                    { text: "But couldn't it have been to within a few centimeters? \n                    Even I can do that much." }
+                    { text: "But couldn't it have been to within a few centimeters?\n                    Even I can do that much." }
                 ]
             },
             {
@@ -727,6 +774,93 @@ var English = (function () {
                     { text: "I think you're asking too many questions." }
                 ]
             }
+        ];
+        this.ch2 = [
+            {
+                charId: 'kitsu_chiri',
+                displayName: 'Kitsu-san',
+                text: 'Welcome to Chapter 3! I mean 2.',
+                options: [
+                    {
+                        label: 'Say something',
+                        children: [
+                            { displayName: 'Irritated Kitsu-san', text: "I won't let you!" },
+                            { charId: 'p1', displayName: '%s', text: "..." },
+                        ]
+                    },
+                    {
+                        label: 'Say nothing',
+                        children: [
+                            { text: '...oops.  Thanks for being polite.' },
+                            { charId: 'p1', displayName: '%s', text: "No problem" },
+                            { text: "Wait a second..." }
+                        ]
+                    }
+                ]
+            },
+            {
+                charId: 'kitsu_chiri',
+                displayName: 'Kitsu-san',
+                children: [
+                    { text: 'I guess making choices is possible now.' },
+                    { text: "Too bad I can't use this to write my own stories; that might be cool..." }
+                ]
+            },
+            {
+                charId: 'kitsu_chiri',
+                displayName: 'Kitsu-san',
+                text: "Hey, do you think this can handle more than 2 choices?",
+                options: [
+                    {
+                        label: 'Yes',
+                        children: [
+                            { text: "Your vote of confidence is appreciated." },
+                            { text: "Our logic and algorithms let the writer write, and the computer figures things out." }
+                        ]
+                    },
+                    {
+                        label: "No",
+                        children: [
+                            { text: "You should have more faith!" },
+                            { text: "All it takes is a decent algorithm." },
+                            { text: "Now then, back to business." },
+                        ]
+                    },
+                    {
+                        label: "I don't know.",
+                        children: [
+                            { text: "You should have more faith!" },
+                            { text: "All it takes is a decent algorithm." },
+                            { text: "Don't pick wishy-washy answers like \"I don't know\"." },
+                        ]
+                    }
+                ]
+            },
+            {
+                charId: 'p1',
+                displayName: '%s',
+                text: '...',
+                options: [
+                    {
+                        label: 'Ok',
+                        children: [
+                            {
+                                charId: 'kitsu_chiri',
+                                displayName: 'Kitsu-san',
+                                children: [
+                                    {
+                                        text: "Good."
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+        this.chErr = [
+            { displayName: 'Kitsu-san', text: 'Oops...' },
+            { displayName: 'Kitsu-san', text: "Something went wrong.  Don't ask me!" }
         ];
     }
     return English;
@@ -756,7 +890,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var GHService = (function () {
+var GHService = /** @class */ (function () {
     function GHService(http) {
         this.http = http;
         this.baseurl = 'http://rmbcorporate.com/';
